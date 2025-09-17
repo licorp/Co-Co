@@ -434,17 +434,30 @@ namespace PipeEndpointUpdater.Helpers
                 {
                     if (connector.IsConnected)
                     {
+                        Logger.LogInfo($"Pipe connector IsConnected: true, checking AllRefs...");
                         ConnectorSet refs = connector.AllRefs;
                         foreach (Connector refConnector in refs)
                         {
-                            if (refConnector.Owner != null && 
-                                refConnector.Owner.Id != pipe.Id && 
-                                !connectedElements.Any(e => e.Id == refConnector.Owner.Id))
+                            if (refConnector.Owner != null)
                             {
-                                connectedElements.Add(refConnector.Owner);
-                                Logger.LogInfo($"Found connected element: {refConnector.Owner.Name} (ID: {refConnector.Owner.Id})");
+                                Logger.LogInfo($"Found ref owner: {refConnector.Owner.Name} (ID: {refConnector.Owner.Id}), Type: {refConnector.Owner.GetType().Name}, Category: {refConnector.Owner.Category?.Name}");
+                                
+                                if (refConnector.Owner.Id != pipe.Id && 
+                                    !connectedElements.Any(e => e.Id == refConnector.Owner.Id))
+                                {
+                                    connectedElements.Add(refConnector.Owner);
+                                    Logger.LogInfo($"Added connected element: {refConnector.Owner.Name} (ID: {refConnector.Owner.Id}), Type: {refConnector.Owner.GetType().Name}");
+                                }
+                                else if (refConnector.Owner.Id == pipe.Id)
+                                {
+                                    Logger.LogInfo($"Skipped self reference: {refConnector.Owner.Name} (ID: {refConnector.Owner.Id})");
+                                }
                             }
                         }
+                    }
+                    else
+                    {
+                        Logger.LogInfo("Pipe connector IsConnected: false");
                     }
                 }
                 

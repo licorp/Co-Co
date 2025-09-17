@@ -101,31 +101,36 @@ namespace PipeEndpointUpdater.Commands
                     {
                         Logger.LogInfo("Pipe endpoint updated successfully");
                         
-                        // BƯỚC 4: Nếu target là pipe, kết nối với fitting rồi xóa pipe
-                        if (elementsToConnectAfter.Count > 0)
+                        // BƯỚC 4: Nếu target là pipe, xử lý kết nối và xóa
+                        if (elementsToDelete.Count > 0)
                         {
-                            Logger.LogInfo("Now connecting to fitting before deleting target pipe");
-                            
-                            // Kết nối với fitting
-                            Element fittingToConnect = elementsToConnectAfter.FirstOrDefault(e => !(e is Pipe)) ?? elementsToConnectAfter[0];
-                            Logger.LogInfo($"Connecting to fitting: {fittingToConnect.Name} (ID: {fittingToConnect.Id})");
-                            
-                            Connector fittingConnector = ConnectorHelper.GetAvailableConnector(fittingToConnect);
-                            if (fittingConnector != null)
+                            if (elementsToConnectAfter.Count > 0)
                             {
-                                bool connectSuccess = PipeHelper.UpdatePipeEndpoint(selectedPipe, fittingConnector);
-                                Logger.LogInfo($"Connection to fitting result: {connectSuccess}");
+                                Logger.LogInfo("Found fittings to connect - connecting before deletion");
                                 
-                                if (connectSuccess)
+                                // Kết nối với fitting
+                                Element fittingToConnect = elementsToConnectAfter.FirstOrDefault(e => !(e is Pipe)) ?? elementsToConnectAfter[0];
+                                Logger.LogInfo($"Connecting to fitting: {fittingToConnect.Name} (ID: {fittingToConnect.Id})");
+                                
+                                Connector fittingConnector = ConnectorHelper.GetAvailableConnector(fittingToConnect);
+                                if (fittingConnector != null)
                                 {
-                                    // Xóa target pipe SAU KHI đã kết nối
-                                    foreach (Element elementToDelete in elementsToDelete)
-                                    {
-                                        Logger.LogInfo($"Deleting element: {elementToDelete.Name} (ID: {elementToDelete.Id})");
-                                        doc.Delete(elementToDelete.Id);
-                                    }
+                                    bool connectSuccess = PipeHelper.UpdatePipeEndpoint(selectedPipe, fittingConnector);
+                                    Logger.LogInfo($"Connection to fitting result: {connectSuccess}");
                                 }
                             }
+                            else
+                            {
+                                Logger.LogInfo("No fittings to connect - pipe B only connected to pipe A, proceeding with deletion");
+                            }
+                            
+                            // Xóa target pipe B trong mọi trường hợp
+                            foreach (Element elementToDelete in elementsToDelete)
+                            {
+                                Logger.LogInfo($"Deleting target pipe: {elementToDelete.Name} (ID: {elementToDelete.Id})");
+                                doc.Delete(elementToDelete.Id);
+                            }
+                            Logger.LogInfo("Target pipe deletion completed");
                         }
                         
                         trans.Commit();
