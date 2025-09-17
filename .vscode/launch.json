@@ -1,0 +1,27 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Debug with Revit",
+            "type": "clr",
+            "request": "attach",
+            "processName": "Revit.exe",
+            "justMyCode": false,
+            "suppressJITOptimizations": true,
+            "enableStepFiltering": false,
+            "requireExactSource": false
+        },
+        {
+            "name": "Debug with Revit (Auto-attach)",
+            "type": "clr",
+            "request": "launch",
+            "program": "C:/Program Files/Autodesk/Revit 2023/Revit.exe",
+            "preLaunchTask": "build-debug",
+            "stopAtEntry": false,
+            "justMyCode": false,
+            "suppressJITOptimizations": true,
+            "enableStepFiltering": false,
+            "console": "internalConsole"
+        }
+    ]
+}

@@ -1,0 +1,6 @@
+C:\Users\quoc.nguyen\Downloads\Compressed\source-code-full-1\Source code full\RevitAPIMEP\Co-Co\obj\Debug\PipeEndpointUpdater.csproj.AssemblyReference.cache
+C:\Users\quoc.nguyen\Downloads\Compressed\source-code-full-1\Source code full\RevitAPIMEP\Co-Co\obj\Debug\PipeEndpointUpdater.csproj.CoreCompileInputs.cache
+C:\Users\quoc.nguyen\Downloads\Compressed\source-code-full-1\Source code full\RevitAPIMEP\Co-Co\bin\Debug\PipeEndpointUpdater_.dll
+C:\Users\quoc.nguyen\Downloads\Compressed\source-code-full-1\Source code full\RevitAPIMEP\Co-Co\bin\Debug\PipeEndpointUpdater_.pdb
+C:\Users\quoc.nguyen\Downloads\Compressed\source-code-full-1\Source code full\RevitAPIMEP\Co-Co\obj\Debug\PipeEndpointUpdater_.dll
+C:\Users\quoc.nguyen\Downloads\Compressed\source-code-full-1\Source code full\RevitAPIMEP\Co-Co\obj\Debug\PipeEndpointUpdater_.pdb

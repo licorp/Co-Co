@@ -1,0 +1,170 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "build-debug",
+            "type": "shell",
+            "command": "dotnet",
+            "args": [
+                "build",
+                "${workspaceFolder}/PipeEndpointUpdater.csproj",
+                "/property:Configuration=Debug",
+                "/property:Platform=AnyCPU",
+                "/verbosity:minimal"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared",
+                "showReuseMessage": true,
+                "clear": false
+            },
+            "problemMatcher": "$msCompile"
+        },
+        {
+            "label": "build-release",
+            "type": "shell",
+            "command": "dotnet",
+            "args": [
+                "build",
+                "${workspaceFolder}/PipeEndpointUpdater.csproj",
+                "/property:Configuration=Release",
+                "/property:Platform=AnyCPU",
+                "/verbosity:minimal"
+            ],
+            "group": "build",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared",
+                "showReuseMessage": true,
+                "clear": false
+            },
+            "problemMatcher": "$msCompile"
+        },
+        {
+            "label": "build-msbuild-debug",
+            "type": "shell",
+            "command": "msbuild",
+            "args": [
+                "${workspaceFolder}/PipeEndpointUpdater.csproj",
+                "/property:Configuration=Debug",
+                "/property:Platform=AnyCPU",
+                "/verbosity:minimal"
+            ],
+            "group": "build",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared",
+                "showReuseMessage": true,
+                "clear": false
+            },
+            "problemMatcher": "$msCompile"
+        },
+        {
+            "label": "build-msbuild-release",
+            "type": "shell",
+            "command": "msbuild",
+            "args": [
+                "${workspaceFolder}/PipeEndpointUpdater.csproj",
+                "/property:Configuration=Release",
+                "/property:Platform=AnyCPU",
+                "/verbosity:minimal"
+            ],
+            "group": "build",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared",
+                "showReuseMessage": true,
+                "clear": false
+            },
+            "problemMatcher": "$msCompile"
+        },
+        {
+            "label": "clean",
+            "type": "shell",
+            "command": "dotnet",
+            "args": [
+                "clean",
+                "${workspaceFolder}/PipeEndpointUpdater.csproj"
+            ],
+            "group": "build",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared",
+                "showReuseMessage": true,
+                "clear": false
+            },
+            "problemMatcher": "$msCompile"
+        },
+        {
+            "label": "rebuild",
+            "type": "shell",
+            "command": "dotnet",
+            "args": [
+                "build",
+                "${workspaceFolder}/PipeEndpointUpdater.csproj",
+                "--no-incremental",
+                "/property:Configuration=Debug",
+                "/property:Platform=AnyCPU"
+            ],
+            "group": "build",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared",
+                "showReuseMessage": true,
+                "clear": false
+            },
+            "problemMatcher": "$msCompile",
+            "dependsOn": "clean"
+        },
+        {
+            "label": "copy-to-revit",
+            "type": "shell",
+            "command": "powershell",
+            "args": [
+                "-Command",
+                "& { $dllFile = Get-ChildItem -Path '${workspaceFolder}/bin' -Name '*.dll' -Recurse | Select-Object -First 1; if ($dllFile) { $sourcePath = Join-Path '${workspaceFolder}/bin/Debug' $dllFile; $destPath = 'C:/Program Files/Autodesk/Revit 2023/AddIns/'; Copy-Item $sourcePath $destPath -Force; Write-Host \"Copied $dllFile to Revit AddIns folder\"; } else { Write-Host \"No DLL file found to copy\"; } }"
+            ],
+            "group": "build",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared"
+            },
+            "dependsOn": "build-debug"
+        },
+        {
+            "label": "install-to-revit",
+            "type": "shell",
+            "command": "powershell",
+            "args": [
+                "-File",
+                "${workspaceFolder}/install-to-revit.ps1"
+            ],
+            "group": "build",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared"
+            },
+            "dependsOn": "build-debug"
+        }
+    ]
+}
