@@ -472,5 +472,29 @@ namespace PipeEndpointUpdater.Helpers
                 return connectedElements;
             }
         }
+        
+        /// <summary>
+        /// Lấy connector gần nhất từ pipe đến target connector
+        /// </summary>
+        /// <param name="pipe">Pipe cần tìm connector</param>
+        /// <param name="targetConnector">Target connector để so sánh khoảng cách</param>
+        /// <returns>Connector gần nhất hoặc null</returns>
+        public static Connector GetNearestConnector(Pipe pipe, Connector targetConnector)
+        {
+            Logger.LogMethodEntry(nameof(GetNearestConnector), pipe?.Id, targetConnector?.Owner?.Id);
+            
+            try
+            {
+                ConnectorSet pipeConnectors = pipe.ConnectorManager?.Connectors;
+                if (pipeConnectors == null) return null;
+
+                return FindNearestConnector(pipeConnectors, targetConnector.Origin);
+            }
+            catch (Exception ex)
+            {
+                Logger.LogException(ex, "Error getting nearest connector");
+                return null;
+            }
+        }
     }
 }

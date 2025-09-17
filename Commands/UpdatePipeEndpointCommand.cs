@@ -108,15 +108,25 @@ namespace PipeEndpointUpdater.Commands
                             {
                                 Logger.LogInfo("Found fittings to connect - connecting before deletion");
                                 
-                                // Kết nối với fitting
+                                // Kết nối với fitting sử dụng ConnectTo để tạo kết nối thực sự
                                 Element fittingToConnect = elementsToConnectAfter.FirstOrDefault(e => !(e is Pipe)) ?? elementsToConnectAfter[0];
                                 Logger.LogInfo($"Connecting to fitting: {fittingToConnect.Name} (ID: {fittingToConnect.Id})");
                                 
                                 Connector fittingConnector = ConnectorHelper.GetAvailableConnector(fittingToConnect);
                                 if (fittingConnector != null)
                                 {
-                                    bool connectSuccess = PipeHelper.UpdatePipeEndpoint(selectedPipe, fittingConnector);
-                                    Logger.LogInfo($"Connection to fitting result: {connectSuccess}");
+                                    // Lấy connector gần nhất của pipe A để kết nối với fitting
+                                    Connector pipeConnector = PipeHelper.GetNearestConnector(selectedPipe, fittingConnector);
+                                    if (pipeConnector != null)
+                                    {
+                                        Logger.LogInfo("Attempting direct connection using ConnectTo");
+                                        bool connectSuccess = ConnectorHelper.ConnectConnectors(pipeConnector, fittingConnector);
+                                        Logger.LogInfo($"Direct connection to fitting result: {connectSuccess}");
+                                    }
+                                    else
+                                    {
+                                        Logger.LogWarning("Could not find suitable pipe connector for fitting connection");
+                                    }
                                 }
                             }
                             else
